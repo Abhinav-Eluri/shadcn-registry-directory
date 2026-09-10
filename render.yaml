@@ -1,0 +1,12 @@
+services:
+  # All-in-One Web Service: Builds React frontend, serves UI + API, and runs daily background scraper cron
+  - type: web
+    name: shadcn-directory
+    env: python
+    buildCommand: "cd frontend && npm install && npm run build && cd .. && pip install -r requirements.txt"
+    startCommand: "python server.py"
+    plan: free
+    envVars:
+      - key: PORT
+        value: 10000
+
