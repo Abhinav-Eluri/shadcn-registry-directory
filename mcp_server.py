@@ -10,7 +10,8 @@ import json
 import os
 from typing import Dict, List, Optional
 import requests
-from mcp.server.mcpserver import MCPServer
+from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 # -------------------------------
 # In-Memory Database & Index
@@ -68,10 +69,16 @@ load_database()
 # MCP Server Initialization
 # -------------------------------
 
-mcp = MCPServer(
+transport_security = TransportSecuritySettings(
+    enable_dns_rebinding_protection=False,
+    allowed_hosts=["*"],
+    allowed_origins=["*"],
+)
+
+mcp = FastMCP(
     name="shadcn-directory",
-    version="1.0.0",
-    description="Search, compare, and install 41,700+ verified shadcn components from 294+ registries."
+    instructions="Search, compare, and install 41,700+ verified shadcn components from 294+ registries.",
+    transport_security=transport_security,
 )
 
 
