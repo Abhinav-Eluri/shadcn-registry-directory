@@ -210,7 +210,7 @@ export const ComponentWebsitesModal: React.FC<ComponentWebsitesModalProps> = ({
 
         {/* Footer */}
         <div className="p-4 border-t border-white/10 bg-zinc-900/40 flex items-center justify-between text-xs text-zinc-500">
-          <span>Click "Copy CLI" to install directly into your project via the shadcn CLI.</span>
+          <span>Click "Copy CLI" to install directly into your project via the CLI.</span>
           <button
             type="button"
             onClick={onClose}

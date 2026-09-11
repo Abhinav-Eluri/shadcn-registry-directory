@@ -115,10 +115,10 @@ export function App() {
       <footer className="border-t border-white/10 bg-zinc-950 py-8 text-xs text-zinc-500 text-center">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© 2026 ComponentHub. Open Registry Catalog.</p>
-          <div className="flex items-center gap-4">
-            <span>Powered by official shadcn registry index</span>
+          <div className="flex items-center gap-4 text-zinc-500">
+            <span>294 Registries</span>
             <span>•</span>
-            <a href="https://ui.shadcn.com" target="_blank" rel="noreferrer" className="hover:text-zinc-300">shadcn/ui</a>
+            <span>34,000+ Components</span>
           </div>
         </div>
       </footer>
