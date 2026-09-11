@@ -64,12 +64,28 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="ComponentHub API & Host", lifespan=lifespan)
 
 
+MCP_MOUNTED = False
+MCP_ERROR = None
+
+# Mount Model Context Protocol (MCP) Remote Server
+try:
+    from mcp_server import mcp as mcp_instance
+    app.mount("/mcp", mcp_instance.sse_app(mount_path="/mcp"))
+    MCP_MOUNTED = True
+    logger.info("Remote MCP Server mounted at /mcp/sse")
+except Exception as mcp_err:
+    MCP_ERROR = f"{type(mcp_err).__name__}: {str(mcp_err)}"
+    logger.error(f"Failed to mount MCP Server: {mcp_err}", exc_info=True)
+
+
 @app.get("/api/health")
 def health_check():
     return {
         "status": "healthy",
         "is_scraping": IS_SCRAPING,
         "last_scrape_time": LAST_SCRAPE_TIME,
+        "mcp_mounted": MCP_MOUNTED,
+        "mcp_error": MCP_ERROR,
     }
 
 
@@ -82,23 +98,16 @@ def trigger_manual_sync(background_tasks: BackgroundTasks):
     return {"message": "Scrape task started in background"}
 
 
-# Mount Model Context Protocol (MCP) Remote Server
-try:
-    from mcp_server import mcp as mcp_instance
-    app.mount("/mcp", mcp_instance.sse_app())
-    logger.info("Remote MCP Server mounted at /mcp/sse")
-except Exception as mcp_err:
-    logger.error(f"Failed to mount MCP Server: {mcp_err}")
-
-
 @app.get("/api/mcp")
 def mcp_info():
     """Returns instructions and connection details for AI agents connecting via MCP."""
     return {
-        "status": "active",
+        "status": "active" if MCP_MOUNTED else "error",
         "name": "ComponentHub",
         "protocol": "Model Context Protocol (SSE)",
         "endpoint": "/mcp/sse",
+        "mcp_mounted": MCP_MOUNTED,
+        "mcp_error": MCP_ERROR,
         "description": "ComponentHub: Unified MCP Server exposing 41,700+ verified shadcn components across 294 registries.",
         "tools": [
             "search_components",
@@ -130,7 +139,11 @@ if os.path.exists(FRONTEND_DIST):
         if full_path and os.path.exists(dist_path) and os.path.isfile(dist_path):
             return FileResponse(dist_path)
 
-        # 3. Fallback to index.html for SPA routing
+        # 3. Prevent API and MCP routes from falling back to index.html
+        if full_path.startswith("api/") or full_path.startswith("mcp"):
+            return JSONResponse(status_code=404, content={"detail": f"Route /{full_path} not found"})
+
+        # 4. Fallback to index.html for SPA routing
         index_path = os.path.join(FRONTEND_DIST, "index.html")
         if os.path.exists(index_path):
             return FileResponse(index_path)
