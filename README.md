@@ -48,3 +48,45 @@ The repository includes a preconfigured [`render.yaml`](./render.yaml).
 1. Go to [dashboard.render.com](https://dashboard.render.com/) &rarr; **New +** &rarr; **Blueprint**.
 2. Connect this repository and click **Apply**.
 3. Render will deploy the all-in-one Web Service with automated daily background sync!
+
+---
+
+## Model Context Protocol (MCP) Server for AI Agents
+
+This repository includes a built-in **Model Context Protocol (MCP) Server** ([`mcp_server.py`](./mcp_server.py)) that lets AI coding assistants (Cursor, Claude Desktop, Antigravity IDE) search and install components across all 294 registries.
+
+### Exposed AI Tools
+
+- `search_components`: Search 41,700+ components with live HTTP 200 verification.
+- `get_component_by_name`: Compare variants of a canonical component (e.g. `button` across `@shadcn`, `@magicui`, `@aceternity`, `@originui`).
+- `get_install_command`: Generates exact `npx shadcn@latest add ...` installation commands.
+- `list_registries`: Explores all 294 indexed registries and their homepages.
+- `inspect_component_schema`: Downloads component JSON schema to inspect files and dependencies before installing.
+
+### Connect to Cursor / Claude Desktop (Local Stdio)
+
+Add to your `claude_desktop_config.json` or Cursor MCP Settings:
+```json
+{
+  "mcpServers": {
+    "shadcn-directory": {
+      "command": "python",
+      "args": ["/path/to/shadcn_example/mcp_server.py"]
+    }
+  }
+}
+```
+
+### Connect to Remote MCP (Render Cloud)
+
+When deployed to Render, the server exposes an SSE endpoint:
+```json
+{
+  "mcpServers": {
+    "shadcn-directory-cloud": {
+      "url": "https://your-app.onrender.com/mcp/sse"
+    }
+  }
+}
+```
+

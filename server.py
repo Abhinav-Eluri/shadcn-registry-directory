@@ -82,6 +82,33 @@ def trigger_manual_sync(background_tasks: BackgroundTasks):
     return {"message": "Scrape task started in background"}
 
 
+# Mount Model Context Protocol (MCP) Remote Server
+try:
+    from mcp_server import mcp as mcp_instance
+    app.mount("/mcp", mcp_instance.sse_app())
+    logger.info("Remote MCP Server mounted at /mcp/sse")
+except Exception as mcp_err:
+    logger.error(f"Failed to mount MCP Server: {mcp_err}")
+
+
+@app.get("/api/mcp")
+def mcp_info():
+    """Returns instructions and connection details for AI agents connecting via MCP."""
+    return {
+        "status": "active",
+        "protocol": "Model Context Protocol (SSE)",
+        "endpoint": "/mcp/sse",
+        "description": "Unified MCP Server exposing 41,700+ verified shadcn components across 294 registries.",
+        "tools": [
+            "search_components",
+            "get_component_by_name",
+            "get_install_command",
+            "list_registries",
+            "inspect_component_schema"
+        ]
+    }
+
+
 # Serve static JSON data if present
 if os.path.exists(FRONTEND_PUBLIC):
     app.mount("/data", StaticFiles(directory=FRONTEND_PUBLIC), name="data")

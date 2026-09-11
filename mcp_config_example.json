@@ -1,0 +1,42 @@
+{
+  "description": "Configuration examples to connect AI assistants to the Shadcn Registry Directory MCP Server",
+  "local_stdio_configs": {
+    "cursor_desktop_mcp": {
+      "command": "python",
+      "args": [
+        "/Users/abhinaveluri/CourseraCourses/langgraph-course/shadcn_example/mcp_server.py"
+      ],
+      "env": {
+        "PYTHONPATH": "/Users/abhinaveluri/CourseraCourses/langgraph-course/shadcn_example"
+      }
+    },
+    "claude_desktop_config": {
+      "mcpServers": {
+        "shadcn-directory": {
+          "command": "python",
+          "args": [
+            "/Users/abhinaveluri/CourseraCourses/langgraph-course/shadcn_example/mcp_server.py"
+          ]
+        }
+      }
+    },
+    "antigravity_ide_config": {
+      "mcpServers": {
+        "shadcn-directory": {
+          "command": ".venv/bin/python",
+          "args": ["mcp_server.py"],
+          "cwd": "/Users/abhinaveluri/CourseraCourses/langgraph-course/shadcn_example"
+        }
+      }
+    }
+  },
+  "remote_sse_config": {
+    "claude_desktop_or_cursor_remote": {
+      "mcpServers": {
+        "shadcn-directory-cloud": {
+          "url": "https://shadcn-directory.onrender.com/mcp/sse"
+        }
+      }
+    }
+  }
+}
