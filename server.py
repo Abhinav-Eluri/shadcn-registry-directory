@@ -52,30 +52,46 @@ def daily_cron_worker():
             time.sleep(300)
 
 
+MCP_MOUNTED = False
+MCP_ERROR = None
+mcp_instance = None
+
+try:
+    from mcp_server import mcp as mcp_instance
+    mcp_instance.settings.streamable_http_path = "/"
+    streamable_app = mcp_instance.streamable_http_app()
+    sse_app = mcp_instance.sse_app(mount_path="/sse")
+    MCP_MOUNTED = True
+    logger.info("MCP Server loaded successfully (StreamableHTTP + SSE)")
+except Exception as mcp_err:
+    MCP_ERROR = f"{type(mcp_err).__name__}: {str(mcp_err)}"
+    logger.error(f"Failed to load MCP Server: {mcp_err}", exc_info=True)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Start background daily cron thread
     cron_thread = threading.Thread(target=daily_cron_worker, daemon=True)
     cron_thread.start()
     logger.info("Daily 24-hour background cron scheduler started.")
-    yield
+
+    # Run StreamableHTTP session manager if MCP is available
+    if mcp_instance is not None and hasattr(mcp_instance, "session_manager"):
+        async with mcp_instance.session_manager.run():
+            yield
+    else:
+        yield
 
 
 app = FastAPI(title="ComponentHub API & Host", lifespan=lifespan)
 
-
-MCP_MOUNTED = False
-MCP_ERROR = None
-
-# Mount Model Context Protocol (MCP) Remote Server
-try:
-    from mcp_server import mcp as mcp_instance
-    app.mount("/mcp", mcp_instance.sse_app(mount_path="/mcp"))
-    MCP_MOUNTED = True
-    logger.info("Remote MCP Server mounted at /mcp/sse")
-except Exception as mcp_err:
-    MCP_ERROR = f"{type(mcp_err).__name__}: {str(mcp_err)}"
-    logger.error(f"Failed to mount MCP Server: {mcp_err}", exc_info=True)
+# Mount MCP endpoints
+if MCP_MOUNTED:
+    # Modern Streamable HTTP endpoint for Antigravity IDE, Cursor, Claude
+    app.mount("/mcp", streamable_app)
+    # Legacy SSE endpoint
+    app.mount("/sse", sse_app)
+    logger.info("Remote MCP Server mounted: /mcp (StreamableHTTP) and /sse (SSE)")
 
 
 @app.get("/api/health")
