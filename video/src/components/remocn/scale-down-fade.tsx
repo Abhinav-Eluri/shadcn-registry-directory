@@ -8,6 +8,7 @@ export interface ScaleDownFadeProps {
   color?: string;
   fontWeight?: number;
   speed?: number;
+  offsetY?: number;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ export function ScaleDownFade({
   color = "#171717",
   fontWeight = 600,
   speed = 1,
+  offsetY = 0,
   className,
 }: ScaleDownFadeProps) {
   const frame = useCurrentFrame() * speed;
@@ -99,7 +101,7 @@ export function ScaleDownFade({
           display: "inline-block",
           transformOrigin: "50% 50%",
           opacity,
-          translate: `0 ${y}px`,
+          translate: `0 ${y + offsetY}px`,
           scale: `${scale}`,
         }}
       >

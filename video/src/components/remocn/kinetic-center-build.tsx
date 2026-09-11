@@ -10,6 +10,7 @@ export interface KineticCenterBuildProps {
   color?: string;
   fontWeight?: number;
   speed?: number;
+  offsetY?: number;
   className?: string;
 }
 
@@ -40,6 +41,7 @@ export function KineticCenterBuild({
   color = "#171717",
   fontWeight = 600,
   speed = 1,
+  offsetY = 0,
   className,
 }: KineticCenterBuildProps) {
   const frame = useCurrentFrame() * speed;
@@ -180,7 +182,7 @@ export function KineticCenterBuild({
                 top: "50%",
                 whiteSpace: "nowrap",
                 backfaceVisibility: "hidden",
-                transform: `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+                transform: `translate(-50%, -50%) translate3d(${x}px, ${y + offsetY}px, 0) scale(${scale})`,
                 filter: `blur(${blur}px)`,
                 opacity,
               }}
