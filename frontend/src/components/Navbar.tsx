@@ -2,8 +2,8 @@ import React from "react";
 import { ShieldCheck, Layers } from "lucide-react";
 
 interface NavbarProps {
-  activeView: "all" | "grouped";
-  onViewChange: (view: "all" | "grouped") => void;
+  activeView: "search" | "a2z";
+  onViewChange: (view: "search" | "a2z") => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -15,7 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-950 border border-white/15 flex items-center justify-center shadow-inner">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-950 border border-white/15 flex items-center justify-center shadow-inner">
             <Layers className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -30,31 +30,31 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* View Switcher Tabs */}
+        {/* View Switcher Tabs: Search (First tab) vs A-Z Directory (Second tab) */}
         <div className="flex items-center bg-zinc-900/90 border border-white/10 rounded-xl p-1 shadow-inner">
           <button
             type="button"
-            onClick={() => onViewChange("all")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-              activeView === "all"
-                ? "bg-zinc-800 text-white shadow-sm border border-white/10"
-                : "text-zinc-400 hover:text-white"
-            }`}
-          >
-            All Components
-          </button>
-          <button
-            type="button"
-            onClick={() => onViewChange("grouped")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeView === "grouped"
+            onClick={() => onViewChange("search")}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              activeView === "search"
                 ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
                 : "text-zinc-400 hover:text-white"
             }`}
           >
-            <span>By Component</span>
+            Search
+          </button>
+          <button
+            type="button"
+            onClick={() => onViewChange("a2z")}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              activeView === "a2z"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            <span>A-Z Directory</span>
             <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-500/30 text-indigo-200">
-              Grouped
+              A → Z
             </span>
           </button>
         </div>
