@@ -7,29 +7,6 @@ interface SearchViewProps {
   onSelectComponent: (componentName: string, items: ComponentItem[]) => void;
 }
 
-const POPULAR_COMPONENTS = [
-  "button",
-  "dialog",
-  "card",
-  "accordion",
-  "avatar",
-  "badge",
-  "input",
-  "tabs",
-  "table",
-  "sidebar",
-  "calendar",
-  "command",
-  "tooltip",
-  "select",
-  "popover",
-  "sheet",
-  "dropdown-menu",
-  "bento-grid",
-  "dock",
-  "glow",
-];
-
 export const SearchView: React.FC<SearchViewProps> = ({
   components,
   onSelectComponent,
@@ -84,20 +61,10 @@ export const SearchView: React.FC<SearchViewProps> = ({
     return groups;
   }, [groupsMap]);
 
-  // Filter components for dropdown
+  // Filter components for dropdown (only when query exists)
   const dropdownResults = useMemo(() => {
     if (!searchQuery.trim()) {
-      // Return popular items if input empty
-      return POPULAR_COMPONENTS.map((name) => {
-        const items = groupsMap.get(name) || [];
-        return {
-          name,
-          title: name.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-          items,
-          count: items.length,
-          verifiedCount: items.filter((i) => i.install_status === 200).length,
-        };
-      }).filter((g) => g.count > 0);
+      return [];
     }
 
     const q = searchQuery.toLowerCase().trim();
@@ -183,12 +150,16 @@ export const SearchView: React.FC<SearchViewProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setIsDropdownOpen(true);
+              const val = e.target.value;
+              setSearchQuery(val);
+              setIsDropdownOpen(val.trim().length > 0);
             }}
-            onFocus={() => setIsDropdownOpen(true)}
+            onFocus={() => {
+              if (searchQuery.trim().length > 0) {
+                setIsDropdownOpen(true);
+              }
+            }}
             onKeyDown={handleKeyDown}
-            autoFocus
             placeholder="Search component names (e.g. button, dock, bento, accordion)..."
             className="w-full pl-14 pr-24 py-4 sm:py-5 bg-zinc-900/90 hover:bg-zinc-900 border border-white/15 focus:border-indigo-500 rounded-2xl text-base sm:text-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 shadow-2xl transition-all"
           />
@@ -198,6 +169,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
               <button
                 onClick={() => {
                   setSearchQuery("");
+                  setIsDropdownOpen(false);
                   inputRef.current?.focus();
                 }}
                 className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
@@ -212,8 +184,8 @@ export const SearchView: React.FC<SearchViewProps> = ({
           </div>
         </div>
 
-        {/* Dropdown Menu */}
-        {isDropdownOpen && (
+        {/* Dropdown Menu (only open when query exists) */}
+        {isDropdownOpen && searchQuery.trim().length > 0 && (
           <div
             ref={dropdownRef}
             className="absolute left-0 right-0 top-full mt-2.5 bg-zinc-950/95 backdrop-blur-2xl border border-white/15 rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150 divide-y divide-white/5"
