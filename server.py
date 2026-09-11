@@ -61,7 +61,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="Shadcn Directory API & Host", lifespan=lifespan)
+app = FastAPI(title="ComponentHub API & Host", lifespan=lifespan)
 
 
 @app.get("/api/health")
@@ -96,9 +96,10 @@ def mcp_info():
     """Returns instructions and connection details for AI agents connecting via MCP."""
     return {
         "status": "active",
+        "name": "ComponentHub",
         "protocol": "Model Context Protocol (SSE)",
         "endpoint": "/mcp/sse",
-        "description": "Unified MCP Server exposing 41,700+ verified shadcn components across 294 registries.",
+        "description": "ComponentHub: Unified MCP Server exposing 41,700+ verified shadcn components across 294 registries.",
         "tools": [
             "search_components",
             "get_component_by_name",

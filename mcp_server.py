@@ -76,7 +76,7 @@ transport_security = TransportSecuritySettings(
 )
 
 mcp = FastMCP(
-    name="shadcn-directory",
+    name="componenthub",
     instructions="Search, compare, and install 41,700+ verified shadcn components from 294+ registries.",
     transport_security=transport_security,
 )

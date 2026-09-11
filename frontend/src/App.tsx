@@ -311,7 +311,7 @@ export function App() {
       {/* Footer */}
       <footer className="border-t border-white/10 bg-zinc-950 py-8 text-xs text-zinc-500 text-center">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 Shadcn Registry Explorer. Open Registry Catalog.</p>
+          <p>© 2026 ComponentHub. Open Registry Catalog.</p>
           <div className="flex items-center gap-4">
             <span>Powered by official shadcn registry index</span>
             <span>•</span>

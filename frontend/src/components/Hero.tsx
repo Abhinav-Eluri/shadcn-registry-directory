@@ -35,9 +35,9 @@ export const Hero: React.FC<HeroProps> = ({ activeCategory, onSelectCategory }) 
 
       {/* Main Title */}
       <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.15]">
-        The Unified Directory of <br className="hidden sm:inline" />
+        ComponentHub <br className="hidden sm:inline" />
         <span className="bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-400">
-          Shadcn Component Registries
+          The Unified Shadcn Registry Directory
         </span>
       </h1>
 

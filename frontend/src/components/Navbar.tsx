@@ -20,7 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-white tracking-tight text-base">shadcn/directory</span>
+              <span className="font-semibold text-white tracking-tight text-base">ComponentHub</span>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                 <ShieldCheck className="h-3 w-3" />
                 Verified
